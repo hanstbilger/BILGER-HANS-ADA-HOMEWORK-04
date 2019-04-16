@@ -98,8 +98,15 @@ Pdiff_b0
 ```{r}
 mod_1 <- lm(data=d, log(HomeRange_km2)~log(Body_mass_female_mean))
 summary(mod_1)
-?confint
 confint(mod_1, 'log(Body_mass_female_mean)', level=0.95)
+
+# Entire data set CI: 0.869, 1.204
+# Bootstrap b1 CI =  0.859,  1.157 
+
+PCIdiff <- 100*(1-(1.157-.859)/(1.204-.869))
+PCIdiff
+
+# So the bootstrapped 95% CI is ~11% smaller than the 95% CI from the entire dataset. 
 ```
 
 
