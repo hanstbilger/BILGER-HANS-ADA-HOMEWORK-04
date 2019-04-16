@@ -1,0 +1,166 @@
+---
+title: "Scrap"
+author: "Hans Bilger"
+date: "4/16/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+b0 <- x$coefficients[[1]]
+b1 <- x$coefficients[[2]]
+coefs <- c(b0, b1)
+
+lm(data=d, log(HomeRange_km2)~log(Body_mass_female_mean))$coef[1]
+
+nb = 5000 ; bet = NULL ; n = nrow(d)
+ptm <- proc.time() # have a look at the time it takes
+for (i in 1:nb){
+unifnum = sample(c(1:n),n,replace = T)	# pick random indices
+bet[i] = lm(data[unifnum,1]~data[unifnum,2])$coef[2]
+	}
+proc.time() - ptm # about 80 seconds on my end
+
+for (i in 1:1000) {
+    sim[i] <- sample(x, n, replace = TRUE)
+    temp <- d[i, ]
+    temp_mod <- lm(data=temp, log(HomeRange_km2)~log(Body_mass_female_mean))
+    coeff = matrix(data=coefficients(temp_mod), ncol=2)
+    results[b, ] = coeff
+}
+hist(sim, xlab = "Mean of d", main = "Distribution of Means of Simulated Samples")
+
+sim_test <- sample_n(d, 213, replace = TRUE)
+str(sim_test)
+coef(summary(lm(data=sim_test, log(HomeRange_km2)~log(Body_mass_female_mean))))[[1]]
+coef(summary(lm(data=sim_test, log(HomeRange_km2)~log(Body_mass_female_mean))))[[2]]
+
+
+n = nrow(d)
+B = 1000 ## number of bootstraps
+results = numeric(B) ## vector to hold results
+for(b in 1:B){
+  i = sample_n(x=1:000, size = 1000, replace = TRUE) ## sample indices
+  bootSample = d[i] ## get data
+  thetaHat = lm(data=bootSample, log(HomeRange_km2)~log(Body_mass_female_mean))
+  results[b] = thetaHat ## store results
+}
+
+b0 <- for (i in 1:1000) {
+    sim <- sample_n(d, 213, replace = TRUE)
+    b0[i] <- coef(summary(lm(data=sim, log(HomeRange_km2)~log(Body_mass_female_mean))))[[1]]
+}
+
+
+b0(lm(data=d, log(HomeRange_km2)~log(Body_mass_female_mean)), d, 213)
+
+test <- function(){
+    sim <- sample_n(d, 213, replace = TRUE)
+    mod[i] <- lm(data=sim, log(HomeRange_km2)~log(Body_mass_female_mean))
+    b0[i] <- mod$coefficients[[1]]
+    b1[i] <- mod$coefficients[[2]]
+}
+
+test <- select(d, Body_mass_female_mean, HomeRange_km2)
+test <- na.omit(test)
+
+library(tidyverse)
+sim = NULL
+mod = NULL
+b0 = NULL
+b1 = NULL
+coefs = NULL
+xsdf <- sample_n(test, 137, replace = TRUE)
+
+b1_boot <- for (b in 1:1000) {
+    i <- sample(x = 1:n, size = n, replace = TRUE)
+    bootSample <- test[i]
+    thetaHat <- lm(data=bootSample, log(HomeRange_km2)~log(Body_mass_female_mean))
+    b0[b] <- thetaHat$coefficients[[1]]
+    b1[b] <- thetaHat$coefficients[[2]]
+}
+
+for (i in 1:1000) {
+  sim[i] <- sample_n(d, 213, replace = TRUE)
+}
+
+
+hist(sim, xlab = "Mean of d", main = "Distribution of Means of Simulated Samples")
+
+
+
+
+modf <- function(x) {
+  x <- lm(data=d, log(HomeRange_km2)~log(Body_mass_female_mean))
+  b0 <- x$coefficients[[1]]
+  b1 <- x$coefficients[[2]]
+  coefs <- c(b0, b1)
+  return(coefs)
+}
+
+for (i in 1:1000) {
+    sim[i] <- sample(x, n, replace = TRUE)
+    temp <- d[i, ]
+    temp_mod <- lm(data=temp, log(HomeRange_km2)~log(Body_mass_female_mean))
+    coeff = matrix(data=coefficients(temp_mod), ncol=2)
+    results[b, ] = coeff
+}
+hist(sim, xlab = "Mean of d", main = "Distribution of Means of Simulated Samples")
+install.packages("simpleboot")
+library(simpleboot)
+lmodel <- lm(data=d, log(HomeRange_km2)~log(Body_mass_female_mean))
+lboot <- lm.boot(lmodel, R = 1000)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+modf <- function(x) {
+  x <- lm(data=d, log(HomeRange_km2)~log(Body_mass_female_mean))
+  b0 <- x$coefficients[[1]]
+  b1 <- x$coefficients[[2]]
+  coefs <- c(b0, b1)
+  return(coefs)
+}
+
+modf()
+
+```
+
+```{r}
+
+
+```
+
+```{r}
+
+
+```
+
+```{r}
+
+
+```
